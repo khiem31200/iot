@@ -140,16 +140,21 @@ ENDSSH
     }
 
     post {
-        success {
-            echo "Pipeline SUCCESS — Image: ${ECR_URI}:${IMAGE_TAG}"
-        }
-        failure {
-            echo "Pipeline FAILED at stage — check logs above"
-        }
-        always {
-            // Xóa image local để tiết kiệm disk
-            sh "docker rmi ${ECR_REPO}:${IMAGE_TAG} || true"
-            sh "docker rmi ${ECR_URI}:${IMAGE_TAG} || true"
+    success {
+        echo "Pipeline SUCCESS — Image: ${env.ECR_URI}:${env.IMAGE_TAG}"
+    }
+    failure {
+        echo "Pipeline FAILED — check logs above"
+    }
+    always {
+        script {
+            def ecrRepo = env.ECR_REPO ?: 'unknown'
+            def imageTag = env.IMAGE_TAG ?: 'unknown'
+            def ecrUri   = env.ECR_URI  ?: 'unknown'
+
+            sh "docker rmi ${ecrRepo}:${imageTag} || true"
+            sh "docker rmi ${ecrUri}:${imageTag}  || true"
         }
     }
+}
 }
