@@ -98,15 +98,13 @@ pipeline {
             echo "Pipeline FAILED — check logs above"
         }
         always {
-            node {
-                script {
-                    def ecrRepo  = env.ECR_REPO  ?: 'unknown'
-                    def imageTag = env.IMAGE_TAG  ?: 'unknown'
-                    def ecrUri   = env.ECR_URI    ?: 'unknown'
-                    sh "docker rmi ${ecrRepo}:${imageTag} || true"
-                    sh "docker rmi ${ecrUri}:${imageTag}  || true"
-                }
-            }
+             script {
+                 def ecrRepo  = env.ECR_REPO  ?: 'unknown'
+                 def imageTag = env.IMAGE_TAG  ?: 'unknown'
+                 def ecrUri   = env.ECR_URI    ?: 'unknown'
+                 sh "docker rmi ${ecrRepo}:${imageTag} || true"
+                 sh "docker rmi ${ecrUri}:${imageTag}  || true"
+             }
         }
     }
 }
